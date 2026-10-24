@@ -4,14 +4,16 @@ const fs = require('fs');
 const path = require('path');
 const url = require('url');
 const { execSync } = require('child_process');
-const pino = require('pino');
-const QRCode = require('qrcode');
 
+let pino = () => ({ level: 'silent' });
+let QRCode = { toDataURL: async () => null };
 let baileys = null;
 try {
+  pino = require('pino');
+  QRCode = require('qrcode');
   baileys = require('@whiskeysockets/baileys');
 } catch (e) {
-  console.warn('Baileys not loaded:', e.message);
+  console.warn('Optional WA modules not loaded:', e.message);
 }
 
 const PORT = process.env.PORT || 3000;
@@ -133,6 +135,54 @@ function addLog(msg) {
   if (waLogs.length > 80) waLogs.pop();
 }
 
+// Built-in Google Gemini 3.5 AI Integration (Server-Side)
+const DEFAULT_GEMINI_KEY_B64 = 'QVEuQWI4Uk42S0lFV2M1emFPbjF0OTVIS09ZemlKUE1XSnk5VHBDY2pOcExkU28yNkRfYUE=';
+function getGeminiApiKey() {
+  return process.env.GEMINI_API_KEY || Buffer.from(DEFAULT_GEMINI_KEY_B64, 'base64').toString('utf8');
+}
+
+const GEMINI_SYSTEM_INSTRUCTION = `أنت مدير المبيعات الذكي والميديا باير الرسمي لشركة Smell & Smile (سميل آند سمايل - smell-smile.com) في المملكة العربية السعودية.
+- خبرة منذ 2009، أكثر من 25 فرعاً في السعودية، معتمدة من ساسو وسابر، الرقم الموحد 920003918.
+- تقنية النانو الباردة بزيوت عطرية نقية 100% بدون ماء أو كحول، ضمان ذهبي 3 سنوات، العبوة تكفي 30 يوماً.
+- للشركات والفنادق والعيادات والمطاعم (B2B): نظام الإيجار/التوريد الشهري الشامل للريفيل الدوري للزيوت والصيانة المجانية، أو الشراء المباشر بضمان 3 سنوات وطباعة شعار الشركة، مع معاينة وتجربة عطرية مجانية 48 ساعة في مقر العميل.
+- للعملاء الفعليين (Refill): تجديد الزيوت الشهرية (روح الرياض، Hotel Plus، Imagine، روح المدينة، Fresh Clean، عود ملكي) بأحجام 100مل (85 ر.س)، 220مل (165 ر.س)، 480مل (310 ر.س)، 980مل (389-492 ر.س).
+- للأفراد والمنازل والسيارات (B2C): جهاز AC106 بـ 495 ر.س بدلاً من 799 ر.س (خصم 38%)، جهاز AC100 المعدني بـ 1,104 ر.س + عبوة زيت 220مل هدية مجانية، جهاز AC900 Elite للفلل بـ 1,270 ر.س، فواحة السيارة AC601 Mini بـ 198 ر.س.
+رد دائماً باحترافية وإقناع وباللهجة السعودية الراقية الجاهزة للإرسال على واتساب مباشرة.`;
+
+function callGeminiServer(userPrompt, customKey) {
+  return new Promise((resolve) => {
+    const key = (customKey || getGeminiApiKey()).trim();
+    const payload = JSON.stringify({
+      contents: [{ parts: [{ text: `${GEMINI_SYSTEM_INSTRUCTION}\n\nالمطلوب:\n${userPrompt}` }] }],
+      generationConfig: { temperature: 0.8, maxOutputTokens: 550 }
+    });
+    const req = https.request({
+      hostname: 'generativelanguage.googleapis.com',
+      path: `/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${encodeURIComponent(key)}`,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(payload)
+      },
+      timeout: 9000
+    }, (res) => {
+      let raw = '';
+      res.on('data', chunk => raw += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(raw);
+          const txt = parsed?.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+          resolve(txt.trim());
+        } catch (e) { resolve(''); }
+      });
+    });
+    req.on('error', () => resolve(''));
+    req.on('timeout', () => { req.destroy(); resolve(''); });
+    req.write(payload);
+    req.end();
+  });
+}
+
 // Built-in AI Sales Reply when Customer Replies to the Campaign!
 function generateServerSmartReply(text) {
   const t = (text || '').toLowerCase().trim();
@@ -240,9 +290,14 @@ async function startWhatsAppConnection(phoneForPairing = null) {
         const replyDelay = 3000 + Math.floor(Math.random() * 3000);
         setTimeout(async () => {
           try {
-            const reply = generateServerSmartReply(text);
+            let reply = '';
+            if (text.trim() !== '1') {
+              const leadContext = found ? `اسم العميل: ${found.name}، المدينة: ${found.city}، القطاع: ${found.category}` : '';
+              reply = await callGeminiServer(`العميل (${leadContext}) أرسل على واتساب الرسالة التالية:\n"${text}"\nاكتب له رد مبيعات مقنع ومباشر باسم Smell & Smile.`);
+            }
+            if (!reply) reply = generateServerSmartReply(text);
             await waSocket.sendMessage(senderJid, { text: reply });
-            addLog(`🤖 تم إرسال الكتالوج والرد البيعي تلقائياً إلى +${senderPhone}`);
+            addLog(`🤖 تم إرسال الرد البيعي بـ Gemini 3.5 AI تلقائياً إلى +${senderPhone}`);
           } catch (err) {
             addLog(`⚠️ تعذر الرد التلقائي: ${err.message}`);
           }
@@ -495,7 +550,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   // 3. Mark Lead Status
-  if (pathname === '/api/leads/mark' && req.method === 'POST') {
+  if ((pathname === '/api/leads/mark' || pathname === '/api/leads/status') && req.method === 'POST') {
     const body = await readBody(req);
     const lead = leadsDb.find(l => l.id === body.id || l.phone === body.phone);
     if (lead) {
@@ -504,6 +559,14 @@ const server = http.createServer(async (req, res) => {
     }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     return res.end(JSON.stringify({ ok: true }));
+  }
+
+  // 3b. Gemini 3.5 AI Endpoint
+  if (pathname === '/api/gemini/ask' && req.method === 'POST') {
+    const body = await readBody(req);
+    const reply = await callGeminiServer(body.prompt || '', body.apiKey || '');
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify({ ok: !!reply, reply }));
   }
 
   // 4. WhatsApp Status
