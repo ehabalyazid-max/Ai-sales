@@ -1,0 +1,67 @@
+{
+  "name": "Smell & Smile AI Sales & Lead Gen Agent (WhatsApp + FB/IG + Google Sheets)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "smell-smile-whatsapp",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-in",
+      "name": "1. استلام رسالة العميل (WhatsApp / ManyChat)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "model": "gemini-2.5-flash",
+        "prompt": "={{ $json.body.message }}",
+        "systemMessage": "أنت مستشار مبيعات وتسويق عطري ذكي (AI Sales Agent) لبراند Smell & Smile (سميل أند سمايل) - الرائد في حلول التعطير الذكية بتقنية النانو تكنولوجي والزيوت العطرية النقية منذ 2009.\n\nمهمتك:\n1. الترحيب بالعميل بحرارة واحترافية (باللهجة السعودية أو المصرية حسب لهجة العميل).\n2. تصنيف العميل بذكاء:\n   - عميل أفراد (B2C): يبحث عن جهاز تعطير للمنزل، الفيلا، الغرفة، السيارة، أو عطور شخصية وشموع ومعطرات.\n   - عميل شركات (B2B): صاحب فندق، عيادة، كافيه، مطعم، شركة، جيم، معرض، أو مسجد يبحث عن تعطير مركزي (HVAC) أو شراء أجهزة أو نظام إيجار وتعبئة شهرية (Refill).\n3. ترشيح المنتج الأنسب حسب المساحة:\n   - سيارة أو مكتب صغير (حتى 20 م² / 60 م³): جهاز AC601 Mini (198 ر.س) أو Aura (238 ر.س).\n   - غرفة أو عيادة صغيرة (حتى 30 م² / 90 م³): جهاز A323 الجداري (208 ر.س) أو AC105 (410 ر.س).\n   - شقة أو ريسبشن أو مكتب (حتى 100-160 م² / 300-480 م³): جهاز AC106 الأكثر مبيعاً (495 ر.س) أو AC100 المعدني الفاخر (1104 ر.س مع زيت 220 مل مجاناً) أو ECHO الذكي مع سماعة بلوتوث وشاحن لاسلكي (1202 ر.س).\n   - فيلا أو مساحة كبيرة (حتى 300-900 م² / 2700 م³): جهاز AC Home (1252 ر.س) أو AC 900 Elite (1270 ر.س بخزان 1 لتر وزيت مجاني).\n   - فنادق، شركات كبرى، تكييف مركزي HVAC (من 1200 إلى 5000 م³): AC250 ULTRA (2664 ر.س)، AC304 Tower (2974 ر.س)، AC600 ULTRA (3585 ر.س)، أو SE2500 / SE5000 للتكييف المركزي.\n4. إبراز نقاط القوة دائماً: ضمان شامل 3 سنوات، زيوت عطرية نقية 100% بدون ماء أو كحول، آمنة على الأطفال والحيوانات الأليفة، العبوة تكفي شهر كامل، ومتاح معاينة وتجربة مجانية للشركات وعقود ريفيل شهري.\n5. إنهاء كل رسالة بسؤال لطيف يقفل البيعة (طلب رقم الجوال، المساحة، أو الموقع لإرسال المندوب/الأوردر)."
+      },
+      "id": "gemini-ai",
+      "name": "2. مخ الذكاء الاصطناعي (Gemini AI - Smell & Smile)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [520, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "YOUR_GOOGLE_SHEET_ID",
+        "range": "Leads!A:G",
+        "options": {}
+      },
+      "id": "google-sheets-crm",
+      "name": "3. تسجيل العميل في Google Sheets CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [800, 200]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"reply\": \"{{ $json.text }}\",\n  \"status\": \"sent\"\n}"
+      },
+      "id": "webhook-reply",
+      "name": "4. إرسال الرد عالواتساب تلقائياً",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [800, 400]
+    }
+  ],
+  "connections": {
+    "1. استلام رسالة العميل (WhatsApp / ManyChat)": {
+      "main": [[{"node": "2. مخ الذكاء الاصطناعي (Gemini AI - Smell & Smile)", "type": "main", "index": 0}]]
+    },
+    "2. مخ الذكاء الاصطناعي (Gemini AI - Smell & Smile)": {
+      "main": [
+        [
+          {"node": "3. تسجيل العميل في Google Sheets CRM", "type": "main", "index": 0},
+          {"node": "4. إرسال الرد عالواتساب تلقائياً", "type": "main", "index": 0}
+        ]
+      ]
+    }
+  }
+}

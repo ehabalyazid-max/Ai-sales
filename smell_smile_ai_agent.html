@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Smell & Smile AI Agent | وكيل المبيعات والواتساب الأوتوماتيك</title>
+  <style>
+    :root {
+      --bg-dark: #0b0f17;
+      --bg-card: #151c28;
+      --bg-card-hover: #1c2536;
+      --gold: #d4af37;
+      --gold-light: #f3e5ab;
+      --gold-dark: #aa820a;
+      --accent-green: #25d366;
+      --accent-green-dark: #128c7e;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #263147;
+      --danger: #ef4444;
+      --info: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 90px;
+    }
+
+    .app-header {
+      background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
+      border-bottom: 2px solid var(--gold);
+      padding: 14px 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+    }
+
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .brand-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      font-size: 17px;
+      color: #000;
+      box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+      flex-shrink: 0;
+    }
+
+    .brand-title h1 {
+      font-size: 16.5px;
+      color: var(--gold-light);
+      font-weight: 800;
+    }
+
+    .brand-title p {
+      font-size: 11.5px;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      background: rgba(37, 211, 102, 0.15);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent-green);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); opacity: 0.7; }
+      50% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(0.95); opacity: 0.7; }
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .stat-card .lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav-tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 14px;
+      scrollbar-width: none;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      background: var(--bg-card);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000;
+      border-color: var(--gold);
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.25);
+    }
+
+    .tab-section {
+      display: none;
+    }
+
+    .tab-section.active {
+      display: block;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .card-title {
+      font-size: 15.5px;
+      font-weight: 800;
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #cbd5e1;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: #0f1520;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 11px 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      margin-bottom: 12px;
+      outline: none;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: #000;
+      width: 100%;
+    }
+
+    .btn-whatsapp {
+      background: linear-gradient(135deg, var(--accent-green), var(--accent-green-dark));
+      color: #fff;
+      width: 100%;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-outline {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-outline.active, .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+      background: rgba(212, 175, 55, 0.15);
+    }
+
+    .btn-sm {
+      padding: 7px 12px;
+      font-size: 12px;
+      border-radius: 8px;
+    }
+
+    .pairing-box {
+      background: linear-gradient(135deg, #0b1914 0%, #10261e 100%);
+      border: 1px solid var(--accent-green);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+    }
+
+    .code-display {
+      font-size: 26px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      color: var(--gold-light);
+      background: #000;
+      border: 2px dashed var(--gold);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+      margin: 10px 0;
+    }
+
+    .log-box {
+      background: #06090e;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+      max-height: 150px;
+      overflow-y: auto;
+      color: #a7f3d0;
+      margin-top: 10px;
+    }
+
+    .chat-box {
+      background: #0b141a;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      height: 330px;
+      overflow-y: auto;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .msg {
+      max-width: 85%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13.5px;
+      position: relative;
+      white-space: pre-line;
+    }
+
+    .msg-customer {
+      background: #202c33;
+      color: #e9edef;
+      align-self: flex-start;
+      border-top-right-radius: 4px;
+    }
+
+    .msg-agent {
+      background: #005c4b;
+      color: #e9edef;
+      align-self: flex-end;
+      border-top-left-radius: 4px;
+    }
+
+    .msg-meta {
+      font-size: 10px;
+      color: rgba(255,255,255,0.6);
+      margin-top: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .chips-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .chip {
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      color: var(--gold-light);
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 11.5px;
+      cursor: pointer;
+    }
+
+    .chip.active, .chip:hover {
+      background: var(--gold);
+      color: #000;
+      font-weight: 700;
+    }
+
+    .lead-item {
+      background: #0f1520;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .lead-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .lead-name {
+      font-weight: 800;
+      font-size: 14px;
+      color: var(--gold-light);
+    }
+
+    .lead-tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--info);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .lead-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .prod-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 12px;
+    }
+
+    .prod-card {
+      background: #0f1520;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .prod-badge {
+      display: inline-block;
+      background: rgba(212, 175, 55, 0.2);
+      color: var(--gold-light);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .price-tag {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--accent-green);
+      margin: 6px 0;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #111827;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 4px;
+      z-index: 99;
+    }
+
+    .b-nav-item {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 10.5px;
+      font-weight: 700;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 8px;
+    }
+
+    .b-nav-item.active {
+      color: var(--gold);
+    }
+
+    .result-box {
+      background: #090d14;
+      border: 1px dashed var(--gold);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 12px;
+      white-space: pre-line;
+      font-size: 13.5px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-green);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+      display: none;
+      z-index: 1000;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <div class="header-top">
+      <div class="brand-box">
+        <div class="brand-logo">S&S</div>
+        <div class="brand-title">
+          <h1>Smell & Smile AI Agent 🇸🇦</h1>
+          <p>الإرسال الأوتوماتيك + 58 عميل شركات سعودي جاهز + GitHub</p>
+        </div>
+      </div>
+      <div class="status-badge" id="wa-header-status">
+        <span class="dot"></span>
+        <span>جاهز للإرسال</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="num" id="stat-leads">58</div>
+        <div class="lbl">عميل شركات سعودي حقيقي</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-contacted">0</div>
+        <div class="lbl">تم الإرسال إليهم</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-products">16+</div>
+        <div class="lbl">جهاز ونظام تعطير</div>
+      </div>
+      <div class="stat-card">
+        <div class="num" id="stat-refills">4</div>
+        <div class="lbl">تنبيهات ريفيل شهري</div>
+      </div>
+    </div>
+
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-scraper', null, 0)">📲 1. الإرسال للعملاء (58 شركة سعودية)</button>
+      <button class="tab-btn" onclick="switchTab('tab-github', null, 1)">🐙 2. رفع المشروع على GitHub</button>
+      <button class="tab-btn" onclick="switchTab('tab-agent', null, 2)">🤖 3. محاكي وبوت الواتساب</button>
+      <button class="tab-btn" onclick="switchTab('tab-calc', null, 3)">📐 4. حاسبة المساحة والعروض</button>
+      <button class="tab-btn" onclick="switchTab('tab-crm', null, 4)">🔄 5. الريفيل الشهري وCRM</button>
+      <button class="tab-btn" onclick="switchTab('tab-media', null, 5)">📢 6. الميديا باير والإعلانات</button>
+    </div>
+
+    <!-- ================= TAB 1: REAL SAUDI B2B LEADS & WHATSAPP SENDER ================= -->
+    <section id="tab-scraper" class="tab-section active">
+
+      <!-- Mode A: Direct WhatsApp Pairing & Auto-Campaign Sender -->
+      <div class="pairing-box">
+        <div class="card-header" style="border-color:rgba(37,211,102,0.3);">
+          <div class="card-title" style="color:#4ade80;">🔗 الوضع الأول: ربط واتساب بكود (8 أرقام بدون كاميرا) للإرسال والرد الأوتوماتيك</div>
+          <span class="lead-tag" id="wa-conn-badge">غير متصل (اضغط استخراج كود)</span>
+        </div>
+        <p style="font-size:12.5px; color:#d1fae5; margin-bottom:10px;">
+          اكتب رقم الواتساب بتاعك (مع كود الدولة مثل <b>9665xxxxxxxx</b> أو <b>201xxxxxxxxx</b>) واضغط <b>"استخراج كود الربط"</b>. هيطلعلك كود من 8 حروف/أرقام تدخله في موبايلك في <b>(واتساب &larr; الأجهزة المرتبطة &larr; ربط جهاز &larr; الربط برقم الهاتف بدلاً من ذلك)</b>، وبعدها السيرفر هيبعت للعملاء ويرد عليهم أوتوماتيك!
+        </p>
+
+        <div class="form-row">
+          <div>
+            <input type="tel" id="pair-phone-input" placeholder="اكتب رقمك هنا: مثال 966500000000 أو 201000000000" style="margin-bottom:0;" />
+          </div>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-gold" onclick="requestWaPairingCode()">🔑 استخراج كود الربط (8 أرقام)</button>
+            <button class="btn btn-outline" onclick="refreshWaStatus()">🔄 تحديث الحالة</button>
+          </div>
+        </div>
+
+        <div id="pairing-code-container" style="display:none;">
+          <div class="code-display" id="pairing-code-text">---- - ----</div>
+          <p style="text-align:center; font-size:12px; color:var(--gold-light);">
+            انسخ الكود ده وافتح واتساب في موبايلك &larr; الأجهزة المرتبطة &larr; الربط برقم الهاتف وحطه هناك!
+          </p>
+        </div>
+
+        <div id="qr-fallback-container" style="display:none; text-align:center; margin-top:10px;">
+          <img id="qr-img" src="" alt="WhatsApp QR" style="width:180px; height:180px; border-radius:12px; border:2px solid var(--gold);" />
+        </div>
+
+        <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+          <button class="btn btn-whatsapp" style="flex:2;" onclick="startAutoCampaign()">🚀 تشغيل حملة الإرسال الأوتوماتيك الآمن (فاصل 35 ثانية بين كل عميل)</button>
+          <button class="btn btn-danger btn-sm" style="flex:1;" onclick="stopAutoCampaign()">⏹️ إيقاف الحملة</button>
+        </div>
+
+        <div class="log-box" id="wa-logs-box">
+          <div>✅ جاهز للعمل: يمكنك الربط بالكود للإرسال الأوتوماتيكي، أو الضغط على زر (إرسال العرض عالواتساب) قدام أي شركة تحت فوراً!</div>
+        </div>
+      </div>
+
+      <!-- Mode B: 58 Real Saudi B2B Leads Ready for Outreach -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🇸🇦 قائمة 58 عميل شركات سعودي حقيقي جاهزين للتواصل الآن (الرياض • جدة • الدمام)</div>
+          <a href="/ksa_b2b_real_leads.csv" download="ksa_b2b_real_leads.csv" class="btn btn-outline btn-sm">📥 تحميل الشيت (Excel/CSV)</a>
+        </div>
+
+        <label>1️⃣ اختر عرض Smell & Smile اللي هيتبعت للشركات دي:</label>
+        <select id="outreach-template" onchange="renderLeadQueue()">
+          <option value="b2b_rental">🔄 عرض الشركات الأقوى: نظام إيجار/توريد أجهزة + ريفيل زيت شهري + معاينة وتجربة مجانية 48 ساعة</option>
+          <option value="b2b_hvac">❄️ عرض التعطير المركزي (HVAC) للفنادق والعيادات والمولات + ضمان 3 سنوات</option>
+          <option value="b2b_cars">🚗 عرض خاص لمعارض السيارات (تعطير صالة العرض + جملة أجهزة السيارة AC601 Mini كهدايا)</option>
+          <option value="b2c_home">🏠 عرض المنازل والفلل (خصم 38% على AC106 + زيت 220 مل هدية مع AC100)</option>
+        </select>
+
+        <label>2️⃣ فلتر حسب القطاع في السعودية:</label>
+        <div class="chips-wrap" id="sector-filters">
+          <span class="chip active" onclick="filterSector('all', this)">🎯 الكل (58 شركة)</span>
+          <span class="chip" onclick="filterSector('clinics', this)">🏥 عيادات ومجمعات طبية (20)</span>
+          <span class="chip" onclick="filterSector('hotels', this)">🏨 فنادق وأجنحة فندقية (9)</span>
+          <span class="chip" onclick="filterSector('cafes', this)">☕ كافيهات ومطاعم ولاونج (15)</span>
+          <span class="chip" onclick="filterSector('gyms', this)">🏋️ نوادي رياضية وجيم وسبا (7)</span>
+          <span class="chip" onclick="filterSector('cars', this)">🚗 معارض سيارات (7)</span>
+        </div>
+
+        <div id="lead-queue-list"></div>
+      </div>
+
+      <!-- Smart Copy-Paste Phone Extractor + Google Maps Radar -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🧲 ساحب أرقام إضافي من خرائط جوجل وفيسبوك وإنستجرام</div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>القطاع المستهدف:</label>
+            <select id="b2b-niche">
+              <option value="عيادات تجميل وأسنان وجلدية">🦷 عيادات تجميل وأسنان وجلدية</option>
+              <option value="فنادق وشقق فندقية مفروشة">🏨 فنادق وشقق فندقية مفروشة</option>
+              <option value="كافيهات ومطاعم ولاونج">☕ كافيهات ومطاعم ولاونج</option>
+              <option value="نادي رياضي وجيم وسبا">🏋️ جيمات ونوادي صحية وسبا</option>
+              <option value="معارض سيارات وصالات عرض">🚗 معارض سيارات وصالات عرض</option>
+              <option value="شركات عقارات ومكاتب">🏢 شركات عقارات ومكاتب كبرى</option>
+            </select>
+          </div>
+          <div>
+            <label>المدينة السعودية:</label>
+            <input type="text" id="b2b-city" value="الرياض" placeholder="الرياض، جدة، الدمام، الخبر، مكة، القصيم..." />
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:8px; margin-bottom:14px;">
+          <button class="btn btn-gold" onclick="openLeadRadar('maps')">🗺️ فتح أرقامهم على خرائط جوجل</button>
+          <button class="btn btn-outline" onclick="openLeadRadar('fb')">📘 صيد صفحاتهم من فيسبوك</button>
+          <button class="btn btn-outline" onclick="openLeadRadar('ig')">📸 صيد حساباتهم من إنستجرام</button>
+        </div>
+
+        <label>الصق أي نص منسوخ من خرائط جوجل أو الفيس هنا لاستخراج الأرقام أوتوماتيك:</label>
+        <textarea id="raw-scrape-text" rows="3" placeholder="الصق أي نص فيه أرقام 05xxxxxxxx أو +9665xxxxxxxx هنا..."></textarea>
+        <button class="btn btn-outline" style="width:100%;" onclick="extractPhonesFromText()">⚡ استخراج الأرقام وإضافتها للقائمة فوق</button>
+        <div id="scrape-summary" style="margin-top:8px; font-size:13px; color:var(--accent-green); font-weight:700;"></div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: GITHUB & CLOUD DEPLOYMENT ================= -->
+    <section id="tab-github" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🐙 رفع المشروع بالكامل على حسابك في GitHub بضغطة زر</div>
+        </div>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:12px;">
+          أنا جهزتلك المشروع بالكامل كمستودع Git متكامل (`server.js` + واجهة الموبايل + قاعدة بيانات الـ 58 عميل سعودي + كتالوج Smell & Smile + ملفات التشغيل السحابي `Dockerfile` و `render.yaml`). تقدر ترفعه على حسابك في GitHub مباشرة من هنا أو تحمل الملف المضغوط!
+        </p>
+
+        <div class="form-row">
+          <div>
+            <label>اسم المستودع الجديد على GitHub (Repository Name):</label>
+            <input type="text" id="gh-repo-name" value="smell-smile-ai-agent" />
+          </div>
+          <div>
+            <label>مفتاح GitHub Personal Access Token (بصلاحية repo):</label>
+            <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" />
+          </div>
+        </div>
+
+        <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">
+          💡 <b>إزاي تجيب الـ Token من موبايلك في نص دقيقة؟</b> افتح <a href="https://github.com/settings/tokens/new?scopes=repo&description=SmellSmileAgent" target="_blank" style="color:var(--gold);">الرابط المباشر ده في GitHub</a>، اضغط <b>Generate token</b> تحت خالص، وانسخ الكود اللي بيبدأ بـ `ghp_` وحطه هنا:
+        </p>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-gold" style="flex:2;" onclick="pushToGitHubNow()">🚀 أنشئ المستودع وارفع المشروع على GitHub الآن</button>
+          <a href="/api/github/download-zip" download="smell-smile-ai-agent-github.zip" class="btn btn-outline" style="flex:1;">📦 تحميل المشروع كامل (ZIP)</a>
+        </div>
+
+        <div id="gh-result" class="result-box" style="display:none;"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">☁️ إزاي تشغل المشروع من GitHub مجاناً 24 ساعة؟</div>
+        </div>
+        <ol style="padding-right:18px; font-size:13.5px; color:#cbd5e1;">
+          <li>بعد ما ترفع المشروع على GitHub بالزر اللي فوق، ادخل من موبايلك على موقع <b>Render.com</b> أو <b>Koyeb.com</b> أو <b>Railway.app</b> وسجل دخول بحساب GitHub.</li>
+          <li>اختار <b>New Web Service</b> واختار مستودع <code>smell-smile-ai-agent</code>.</li>
+          <li>المشروع فيه ملف <code>render.yaml</code> و <code>Dockerfile</code> جاهزين، هيتسطب ويشتغل لوحده في دقيقتين ويديك لينك خاص بيك شغال مدى الحياة!</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: AI WHATSAPP AGENT CHAT ================= -->
+    <section id="tab-agent" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🤖 مساعد ومحاكي مبيعات Smell & Smile (أفراد وشركات)</div>
+        </div>
+        <div class="chips-wrap">
+          <span class="chip" onclick="simulateQuestion('عندي عيادة تجميل مساحتها 120 متر بالرياض وعايز نظام إيجار أجهزة وريفيل شهري')">🏥 عيادة 120م (إيجار وريفيل B2B)</span>
+          <span class="chip" onclick="simulateQuestion('عندي فندق وتكييف مركزي HVAC عايز أعطر اللوبي والأدوار')">🏨 فندق وتكييف مركزي HVAC</span>
+          <span class="chip" onclick="simulateQuestion('عايز جهاز فواحة للشقة ريسبشن 90 متر ويكون عملي وبضمان')">🏠 جهاز لشقة 90م (كاش أفراد)</span>
+          <span class="chip" onclick="simulateQuestion('بكام جهاز تعطير العربية AC601؟ وهل بيشتغل بالشحن؟')">🚗 جهاز السيارة AC601</span>
+          <span class="chip" onclick="simulateQuestion('إيه أفضل الزيوت العطرية عندكم وبتقعد قد إيه في الجهاز؟')">🌸 الزيوت العطرية ومدة الاستهلاك</span>
+          <span class="chip" onclick="simulateQuestion('الأسعار غالية شوية، إيه اللي يخليني أشتري من سميل أند سمايل؟')">💰 الرد على اعتراض "السعر غالي"</span>
+        </div>
+
+        <div class="chat-box" id="chat-box">
+          <div class="msg msg-agent">
+            أهلاً بك يا صاحبي في مخ الـ AI Agent الخاص ببراند <b>Smell & Smile (سميل أند سمايل)</b>! 🌸
+            اكتب أي رسالة بعتها عميل تحت، وهرد عليه فوراً وأجهزلك زر الإرسال عالواتساب! 👇
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>رسالة العميل:</label>
+            <input type="text" id="customer-input" placeholder="مثال: عندي كافيه 200 متر عايز أعطره، إيه النظام والأسعار؟" onkeypress="if(event.key==='Enter') handleUserChat()" />
+          </div>
+          <div>
+            <label>رقم واتساب العميل (لإرسال الرد المباشر له):</label>
+            <input type="tel" id="customer-phone-chat" placeholder="مثال: 966500000000" />
+          </div>
+        </div>
+
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn btn-gold" style="flex:2;" onclick="handleUserChat()">✨ توليد رد البياع الذكي (AI Reply)</button>
+          <button class="btn btn-whatsapp" style="flex:1;" onclick="sendLastReplyToWhatsApp()">📲 إرسال آخر رد عالواتساب</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 4: SPACE CALCULATOR ================= -->
+    <section id="tab-calc" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📐 حاسبة المساحة وترشيح الجهاز + عرض السعر الفوري</div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>نوع العميل / المكان:</label>
+            <select id="calc-place-type">
+              <option value="clinic">🏥 عيادة طبية / مركز تجميل وأسنان (B2B)</option>
+              <option value="hotel">🏨 فندق / شقق فندقية / مول تجاري (B2B)</option>
+              <option value="cafe">☕ كافيه / مطعم / لاونج (B2B)</option>
+              <option value="office">🏢 شركة / مكتب إداري / معرض سيارات (B2B)</option>
+              <option value="gym">🏋️ جيم / نادي صحي / سبا (B2B)</option>
+              <option value="apartment">🏠 شقة سكنية / ريسبشن منزلي (B2C)</option>
+              <option value="villa">🏡 فيلا / قصر / مجلس كبير (B2C)</option>
+              <option value="car">🚗 سيارة خاصة أو مكتب شخصي (B2C)</option>
+            </select>
+          </div>
+          <div>
+            <label>المساحة التقريبية بالمتر المربع (م²):</label>
+            <input type="number" id="calc-area" value="120" min="5" max="5000" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div>
+            <label>نظام التعاقد المطلوب:</label>
+            <select id="calc-contract">
+              <option value="both">📊 عرض المقارنة (شراء كاش + نظام إيجار وريفيل شهري)</option>
+              <option value="refill">🔄 نظام إيجار / توريد أجهزة + ريفيل زيت شهري (للشركات)</option>
+              <option value="cash">💵 شراء كاش (شامل ضمان 3 سنوات + زيت هدية)</option>
+              <option value="hvac">❄️ تعطير مركزي على التكييف (HVAC System)</option>
+            </select>
+          </div>
+          <div>
+            <label>العملة في عرض السعر:</label>
+            <select id="calc-currency">
+              <option value=" ر.س">🇸🇦 ريال سعودي (ر.س)</option>
+              <option value=" ج.م">🇪🇬 جنيه مصري (ج.م)</option>
+            </select>
+          </div>
+        </div>
+
+        <button class="btn btn-gold" onclick="calculateSpaceOffer()">🚀 احسب المساحة وطلع عرض السعر الذكي</button>
+        <div id="calc-result" class="result-box" style="display:none;"></div>
+        <div id="calc-actions" style="display:none; margin-top:10px; gap:10px;">
+          <button class="btn btn-whatsapp" onclick="sendCalcToWhatsApp()">📲 إرسال عرض السعر للعميل عالواتساب</button>
+          <button class="btn btn-outline" onclick="copyText('calc-result')">📋 نسخ العرض</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📦 كتالوج أجهزة Smell & Smile السريع</div>
+        </div>
+        <div class="prod-grid" id="catalog-grid"></div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 5: CRM & REFILL TRACKER ================= -->
+    <section id="tab-crm" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">🔄 منبه الريفيل الشهري ودفتر العملاء (الذهب الحقيقي في شغلك!)</div>
+          <button class="btn btn-outline btn-sm" onclick="exportCrmCsv()">📥 تحميل الشيت (CSV)</button>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>اسم العميل أو الشركة:</label>
+            <input type="text" id="crm-name" placeholder="مثال: عيادات لؤلؤة العاج / فندق لحظات" />
+          </div>
+          <div>
+            <label>رقم الواتساب:</label>
+            <input type="tel" id="crm-phone" placeholder="مثال: 966550000000" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>الجهاز / النظام والزيت المفضل:</label>
+            <input type="text" id="crm-product" placeholder="مثال: جهاز AC100 + زيت هوتيل بلس 220 مل (ريفيل شهري)" />
+          </div>
+          <div>
+            <label>حالة العميل:</label>
+            <select id="crm-status">
+              <option value="🔔 موعد ريفيل زيت الآن!">🔔 موعد ريفيل زيت الآن! (مر 30 يوم)</option>
+              <option value="🔥 مهتم - متابعة عرض سعر">🔥 مهتم - متابعة عرض سعر</option>
+              <option value="✅ عميل متعاقد (إيجار/شراء)">✅ عميل متعاقد (إيجار/شراء)</option>
+              <option value="⏳ طلب معاينة مجانية">⏳ طلب معاينة مجانية للمكان</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-gold" onclick="addCrmClient()">➕ إضافة العميل لدفتر المتابعة والريفيل</button>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📋 قائمة العملاء وتنبيهات الريفيل الحالية</div>
+        </div>
+        <div id="crm-list"></div>
+      </div>
+    </section>
+
+    <!-- ================= TAB 6: AI MEDIA BUYER ================= -->
+    <section id="tab-media" class="tab-section">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📢 الميديا باير الذكي (إعلانات وبوستات وريلز)</div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>الحملة اللي عايز تشغلها:</label>
+            <select id="media-campaign" onchange="generateMediaPlan()">
+              <option value="b2b_refill">🏢 حملة شركات: إيجار أجهزة تعطير وريفيل شهري (عيادات/فنادق/كافيهات)</option>
+              <option value="b2c_home">🏠 حملة منازل وفلل: خلّي بيتك ريحته زي فنادق الـ 5 نجوم (AC106 & AC100)</option>
+              <option value="car_ac601">🚗 حملة جهاز السيارة الذكي AC601 Mini</option>
+              <option value="perfumes_oils">🌸 حملة الزيوت العطرية النقية (روح الرياض / هوتيل بلس) والعطور الشخصية</option>
+            </select>
+          </div>
+          <div>
+            <label>رقم الواتساب اللي هيتحط في آخر البوست:</label>
+            <input type="tel" id="media-phone" value="" placeholder="اكتب رقمك عشان يتحط في اللينك المباشر" oninput="generateMediaPlan()" />
+          </div>
+        </div>
+
+        <div id="media-output" class="result-box"></div>
+        <div style="display:flex; gap:10px; margin-top:10px;">
+          <button class="btn btn-gold" onclick="copyText('media-output')">📋 نسخ البوست والخطة بالكامل</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="b-nav-item active" onclick="switchTab('tab-scraper', null, 0)">
+      <span>📲</span>
+      <span>58 عميل سعودي</span>
+    </button>
+    <button class="b-nav-item" onclick="switchTab('tab-github', null, 1)">
+      <span>🐙</span>
+      <span>GitHub</span>
+    </button>
+    <button class="b-nav-item" onclick="switchTab('tab-agent', null, 2)">
+      <span>🤖</span>
+      <span>بوت الواتس</span>
+    </button>
+    <button class="b-nav-item" onclick="switchTab('tab-calc', null, 3)">
+      <span>📐</span>
+      <span>حاسبة العرض</span>
+    </button>
+    <button class="b-nav-item" onclick="switchTab('tab-crm', null, 4)">
+      <span>🔄</span>
+      <span>الريفيل وCRM</span>
+    </button>
+    <button class="b-nav-item" onclick="switchTab('tab-media', null, 5)">
+      <span>📢</span>
+      <span>ميديا باير</span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast">تم بنجاح! ✅</div>
+
+  <script>
+    // ================= 58 REAL SAUDI B2B LEADS =================
+    let outreachLeads = [
+      {"name": "عيادات لؤلؤة العاج لطب الأسنان - إشبيليا", "phone": "966595029678", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مجمع ركن الابتسامة لطب الأسنان - غرناطة", "phone": "966537432661", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مركز سجام لطب الأسنان - حي الغدير", "phone": "966508577070", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات زيان لطب الأسنان - شارع التحلية", "phone": "966554418872", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مركز وعيادات لوران لطب الأسنان - الرحمانية", "phone": "966532454058", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مجموعة المهيدب لطب الأسنان (واتساب الإدارة)", "phone": "966555526721", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات نوبل لطب الأسنان - حي النرجس", "phone": "966532328101", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مجمع عيادات الخليج الطبي - حي الخليج", "phone": "966559092314", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادة نوفا للأسنان والتجميل - حي بدر", "phone": "966543453200", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مجمع جود الطبي - حي الياسمين", "phone": "966508014144", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات إمج لطب الأسنان - شارع التخصصي", "phone": "966504836060", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات هلا روز للجلدية والتجميل - النهضة", "phone": "966540005967", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات مسان الطبي - حي شبرا", "phone": "966550426777", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مجمع عيادات دنت الطبي - حي الملك فهد", "phone": "966552916000", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مجمع الجاذبية الطبي للأسنان والجلدية", "phone": "966550407567", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "مركز الفرسان الطبي للأسنان والجلدية", "phone": "966535019888", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات لؤلؤة العاج - فرع السويدي", "phone": "966580319576", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات لؤلؤة العاج - فرع طويق", "phone": "966545956084", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الرياض", "contacted": false},
+      {"name": "عيادات صفوة المهيدب - المنتزه", "phone": "966503222496", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الخرج", "contacted": false},
+      {"name": "عيادات نايف الطبية الشاملة", "phone": "966501553638", "category": "🏥 عيادة طبية", "sector": "clinics", "city": "الخرج", "contacted": false},
+      {"name": "فندق وأجنحة مومنتيك الزهراء الفندقية", "phone": "966554030204", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "جدة", "contacted": false},
+      {"name": "فندق وأجنحة لحظات حراء للشقق المخدومة", "phone": "966500873232", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "جدة", "contacted": false},
+      {"name": "فندق لحظات البلد الفندقي", "phone": "966508116822", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "جدة", "contacted": false},
+      {"name": "أجنحة بست داي الفندقية - المحمدية", "phone": "966536020088", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "جدة", "contacted": false},
+      {"name": "أجنحة بست داي الفندقية - شارع حراء", "phone": "966553008655", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "جدة", "contacted": false},
+      {"name": "فندق وأجنحة لحظات المروة", "phone": "966556670282", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "جدة", "contacted": false},
+      {"name": "فندق وأجنحة الفرحان الحمراء", "phone": "966530829252", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "جدة", "contacted": false},
+      {"name": "فندق سيتي ريزيدنس / مسكن المدينة للأجنحة الفندقية", "phone": "966541788860", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "الدمام", "contacted": false},
+      {"name": "أجنحة لايف للشقق المخدومة - إشبيلية", "phone": "966550696938", "category": "🏨 فندق وأجنحة", "sector": "hotels", "city": "الرياض", "contacted": false},
+      {"name": "أتاشيه لاونج ونادي الضيافة - الحي الدبلوماسي", "phone": "966557452100", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "هوكا لاونج ومطعم - حي النخيل", "phone": "966548901292", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "سيج آند سيرلوين لاونج - فندق أسكوت رافال الصحافة", "phone": "966559063803", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "ستيلا سكاي لاونج - فندق سانت ريجيس فيا الرياض", "phone": "966562050264", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "إف سي لاونج وكافيه - المونسية", "phone": "966555004141", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "مطعم ولاونج أريا - حي العقيق", "phone": "966556633117", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "مطعم بيدوز لاونج - حي العقيق", "phone": "966530681887", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "مطعم خيام لاونج - طريق الملك عبدالعزيز النفل", "phone": "966532291100", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "بيرل دايموند كافيه ولاونج - العليا", "phone": "966532044445", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "كنكة كافيه - حي الياسمين", "phone": "966556663491", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "بالكوني كافيه - حي اليرموك", "phone": "966551363385", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "بلاك هاوس كافيه - حي العليا", "phone": "966508885501", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "الرياض", "contacted": false},
+      {"name": "جينرز لاونج ومطعم راقي - أتيليه سكوير", "phone": "966500559898", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "جدة", "contacted": false},
+      {"name": "لاونج برج ليليان - الأمير سلطان حي السلامة", "phone": "966542608000", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "جدة", "contacted": false},
+      {"name": "لاونج الشاطئ الفاخر - طريق الملك عبدالعزيز", "phone": "966551464333", "category": "☕ كافيه ولاونج", "sector": "cafes", "city": "جدة", "contacted": false},
+      {"name": "نادي جيم الرياضي النسائي - حي الملك سلمان", "phone": "966533531177", "category": "🏋️ جيم وسبا", "sector": "gyms", "city": "الرياض", "contacted": false},
+      {"name": "مركز قوة اللياقة الرياضي - حي المنار", "phone": "966536678881", "category": "🏋️ جيم وسبا", "sector": "gyms", "city": "الدمام", "contacted": false},
+      {"name": "نادي الدمام السعودي الرياضي", "phone": "966509966696", "category": "🏋️ جيم وسبا", "sector": "gyms", "city": "الدمام", "contacted": false},
+      {"name": "نادي جيم داي الرياضي - المحمدية", "phone": "966560886366", "category": "🏋️ جيم وسبا", "sector": "gyms", "city": "جدة", "contacted": false},
+      {"name": "نادي لياقتها الرياضي وسبا - شارع صاري", "phone": "966509610022", "category": "🏋️ جيم وسبا", "sector": "gyms", "city": "جدة", "contacted": false},
+      {"name": "نادي بي سترونج جيم - حي البوادي", "phone": "966542208864", "category": "🏋️ جيم وسبا", "sector": "gyms", "city": "جدة", "contacted": false},
+      {"name": "نادي وسبا روزا جيم - حي الملك فهد", "phone": "966500033207", "category": "🏋️ جيم وسبا", "sector": "gyms", "city": "مكة المكرمة", "contacted": false},
+      {"name": "معرض دار النخبة للسيارات", "phone": "966559911765", "category": "🚗 معرض سيارات", "sector": "cars", "city": "الرياض", "contacted": false},
+      {"name": "معرض الوسطى للسيارات - حي الرماية", "phone": "966558650503", "category": "🚗 معرض سيارات", "sector": "cars", "city": "الرياض", "contacted": false},
+      {"name": "معرض السلطان للسيارات", "phone": "966533197737", "category": "🚗 معرض سيارات", "sector": "cars", "city": "الرياض", "contacted": false},
+      {"name": "معرض الامتياز الحديث للسيارات - الجوهرة", "phone": "966506478137", "category": "🚗 معرض سيارات", "sector": "cars", "city": "جدة", "contacted": false},
+      {"name": "معرض الصقور للسيارات", "phone": "966500915254", "category": "🚗 معرض سيارات", "sector": "cars", "city": "جدة", "contacted": false},
+      {"name": "معرض الخضيمي للسيارات", "phone": "966555892327", "category": "🚗 معرض سيارات", "sector": "cars", "city": "الدمام", "contacted": false},
+      {"name": "معرض مركبة العز للسيارات - ضاحية الملك فهد", "phone": "966505802158", "category": "🚗 معرض سيارات", "sector": "cars", "city": "الدمام", "contacted": false}
+    ];
+
+    let currentSectorFilter = 'all';
+
+    // ================= CATALOG DATA =================
+    const CATALOG = [
+      { id: 'ac601', name: 'AC601 Mini للسيارة والمكتب', m3: 60, m2: 20, price: 198, oldPrice: 346, badge: 'الأكثر مبيعاً للسيارات', desc: 'يعمل بشحن USB بتقنية النانو، يقضي على روائح الدخان والطعام فوراً.' },
+      { id: 'a323', name: 'A323 الجداري للغرف والعيادات', m3: 90, m2: 30, price: 208, oldPrice: 290, badge: 'اقتصادي وعملي', desc: 'تصميم جداري أنيق للغرف والمكاتب وعيادات الكشف.' },
+      { id: 'aura', name: 'Aura المتنقل المضيء', m3: 60, m2: 20, price: 238, oldPrice: 310, badge: 'وصل حديثاً', desc: '15 ساعة تشغيل لاسلكي مع 9 ألوان إضاءة LED.' },
+      { id: 'nano-spray', name: 'Nano Spray للمفروشات', m3: 45, m2: 15, price: 307, oldPrice: 390, badge: 'للمفروشات والستائر', desc: 'ضخ نانو لمسافة 1.5 متر لتعطير الأقمشة والستائر بدون أي بقع.' },
+      { id: 'ac105', name: 'AC105 للغرف والمكاتب', m3: 90, m2: 30, price: 410, oldPrice: 520, badge: 'تقييم 5 نجوم', desc: 'تصميم متنقل وتغطية ممتازة للغرف والمكاتب الإدارية.' },
+      { id: 'ac106', name: 'AC106 (بطارية + كهرباء)', m3: 480, m2: 160, price: 495, oldPrice: 815, badge: 'خصم 38% - بطل المبيعات', desc: 'تغطية 480 م³، زجاجة 480 مل، يعمل بالشحن أو الكهرباء + تحكم بالتطبيق.' },
+      { id: 'smiley-lamp', name: 'Smiley Lamp & Aroma Pro', m3: 225, m2: 75, price: 523, oldPrice: 650, badge: 'ديكور فاخر', desc: 'إضاءة LED ساحرة وتوقيت ذكي للشقق والكافيهات الهادئة.' },
+      { id: 'ac100', name: 'AC100 المعدني + زيت مجاني', m3: 300, m2: 100, price: 1104, oldPrice: 1757, badge: 'هدية زيت 220 مل', desc: 'جسم معدني فخم للمنازل والشركات والمساجد + إمكانية طباعة لوجو شركتك.' },
+      { id: 'echo', name: 'ECHO الذكي (3 في 1)', m3: 300, m2: 100, price: 1202, oldPrice: 1450, badge: 'سماعة بلوتوث + شاحن لاسلكي', desc: 'جهاز تعطير ذكي + شاحن جوال لاسلكي + سماعة بلوتوث للمكاتب الفاخرة.' },
+      { id: 'ac-home', name: 'AC Home بشاشة لمس', m3: 600, m2: 200, price: 1252, oldPrice: 1590, badge: 'للمنازل والفلل', desc: 'شاشة لمس رقمية وحساس ذكي لقياس كثافة العطر في المكان.' },
+      { id: 'ac900', name: 'AC 900 Elite (خزان 1 لتر)', m3: 2700, m2: 900, price: 1270, oldPrice: 1650, badge: 'تغطية جبارة 2700 م³', desc: 'زجاج وستانلس ستيل، خزان 1000 مل + زيت مجاني للفلل والفنادق والشركات.' },
+      { id: 'ac250-ultra', name: 'AC 250 ULTRA للشركات', m3: 3600, m2: 1200, price: 2664, oldPrice: 3100, badge: 'للشركات والفنادق', desc: 'تغطية حتى 3600 م³، تحكم ذكي بالتطبيق وتخصيص شعار الشركة.' },
+      { id: 'ac304', name: 'AC304 Tower البرجي', m3: 2400, m2: 800, price: 2974, oldPrice: 3400, badge: 'لمداخل الفنادق والقصور', desc: 'تصميم برجي مهيب لمداخل الفنادق والقاعات والفلل الكبرى.' },
+      { id: 'ac600-ultra', name: 'AC 600 ULTRA العملاق', m3: 5100, m2: 1700, price: 3585, oldPrice: 4200, badge: 'تغطية 5100 م³', desc: 'خزان 1000 مل، ربط مع التكييف أو مستقل للمولات والفنادق.' },
+      { id: 'se-hvac', name: 'SE2500 & SE5000 تكييف مركزي', m3: 5000, m2: 1650, price: 3685, oldPrice: 4342, badge: 'تكييف مركزي HVAC', desc: 'يركب مباشرة على دكت التكييف المركزي بخزان 2.5 إلى 5 لتر لتعطير المبنى بالكامل.' }
+    ];
+
+    let crmClients = [
+      { name: 'عيادات لؤلؤة العاج لطب الأسنان', phone: '966595029678', product: 'جهازين AC100 + زيت فريش كلين وبلوم 480 مل', status: '🔔 موعد ريفيل زيت الآن!' },
+      { name: 'فندق وأجنحة مومنتيك الزهراء', phone: '966554030204', product: 'جهاز SE2500 مركزي + زيت هوتيل بلس 980 مل (عقد شهري)', status: '🔔 موعد ريفيل زيت الآن!' },
+      { name: 'أتاشيه لاونج - الحي الدبلوماسي', phone: '966557452100', product: 'جهاز AC 900 Elite + زيت روح الرياض 480 مل', status: '🔔 موعد ريفيل زيت الآن!' },
+      { name: 'معرض دار النخبة للسيارات', phone: '966559911765', product: 'عرض جهاز AC250 ULTRA + 20 جهاز سيارة AC601 كهدايا', status: '🔥 مهتم - متابعة عرض سعر' }
+    ];
+
+    let lastAiReply = "أهلاً بك في Smell & Smile 🌸 يسعدنا خدمتك في كافة حلول التعطير الذكية للأفراد والشركات.";
+
+    // ================= TAB NAVIGATION =================
+    function switchTab(tabId, btnEl, navIndex) {
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+
+      const topBtns = document.querySelectorAll('.nav-tabs .tab-btn');
+      const botBtns = document.querySelectorAll('.bottom-nav .b-nav-item');
+
+      const tabOrder = ['tab-scraper', 'tab-github', 'tab-agent', 'tab-calc', 'tab-crm', 'tab-media'];
+      const idx = navIndex !== undefined ? navIndex : tabOrder.indexOf(tabId);
+
+      topBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+      botBtns.forEach((b, i) => b.classList.toggle('active', i === idx));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ================= WHATSAPP SERVER PAIRING & AUTO-CAMPAIGN =================
+    async function requestWaPairingCode() {
+      const phone = cleanPhone(document.getElementById('pair-phone-input').value);
+      if (!phone || phone.length < 10) {
+        showToast('اكتب رقم الواتساب مع كود الدولة أولاً (مثل 9665xxxxxxxx)!');
+        return;
+      }
+
+      document.getElementById('wa-conn-badge').textContent = '⏳ جاري استخراج الكود...';
+      try {
+        const res = await fetch('/api/wa/pair', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone })
+        });
+        const data = await res.json();
+        updateWaUi(data);
+      } catch (e) {
+        showToast('تأكد من فتح الرابط الحي للتطبيق لاستخدام السيرفر المباشر!');
+      }
+    }
+
+    async function refreshWaStatus() {
+      try {
+        const res = await fetch('/api/wa/status');
+        const data = await res.json();
+        updateWaUi(data);
+      } catch (e) {}
+    }
+
+    function updateWaUi(data) {
+      if (!data) return;
+      const badge = document.getElementById('wa-conn-badge');
+      const hdr = document.getElementById('wa-header-status');
+
+      if (data.status === 'connected') {
+        badge.textContent = `✅ متصل (${data.connectedPhone || 'نشط'})`;
+        badge.style.background = 'rgba(37,211,102,0.25)';
+        badge.style.color = '#4ade80';
+        hdr.innerHTML = `<span class="dot"></span><span>متصل بالواتساب</span>`;
+        document.getElementById('pairing-code-container').style.display = 'none';
+        document.getElementById('qr-fallback-container').style.display = 'none';
+      } else if (data.pairingCode) {
+        badge.textContent = '🔑 أدخل الكود في واتساب الآن';
+        document.getElementById('pairing-code-container').style.display = 'block';
+        document.getElementById('pairing-code-text').textContent = data.pairingCode;
+      } else if (data.qr) {
+        document.getElementById('qr-fallback-container').style.display = 'block';
+        document.getElementById('qr-img').src = data.qr;
+      }
+
+      if (Array.isArray(data.logs)) {
+        document.getElementById('wa-logs-box').innerHTML = data.logs.map(l => `<div>${l}</div>`).join('');
+      }
+    }
+
+    async function startAutoCampaign() {
+      const tpl = document.getElementById('outreach-template').value;
+      const filtered = outreachLeads.filter(l => currentSectorFilter === 'all' || l.sector === currentSectorFilter);
+      const payloadLeads = filtered.map(l => ({
+        name: l.name,
+        phone: l.phone,
+        message: getOutreachMessage(l, tpl)
+      }));
+
+      try {
+        const res = await fetch('/api/wa/campaign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'start', leads: payloadLeads })
+        });
+        const data = await res.json();
+        if (!data.ok) {
+          showToast(data.error || 'اربط الكود أولاً أو استخدم زر الإرسال الفردي الأخضر!');
+        } else {
+          showToast('🚀 بدأت الحملة الأوتوماتيكية بفاصل آمن 35 ثانية!');
+          updateWaUi(data);
+        }
+      } catch (e) {
+        showToast('استخدم زر (إرسال العرض عالواتساب) الأخضر أمام كل عميل للإرسال الفوري!');
+      }
+    }
+
+    async function stopAutoCampaign() {
+      try {
+        const res = await fetch('/api/wa/campaign', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'stop' })
+        });
+        const data = await res.json();
+        updateWaUi(data);
+        showToast('⏹️ تم إيقاف الحملة التلقائية.');
+      } catch (e) {}
+    }
+
+    async function sendDirectViaServer(idx) {
+      const l = outreachLeads[idx];
+      const tpl = document.getElementById('outreach-template').value;
+      const msg = getOutreachMessage(l, tpl);
+
+      try {
+        const res = await fetch('/api/wa/send', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: l.phone, name: l.name, message: msg })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          l.contacted = true;
+          renderLeadQueue();
+          updateStats();
+          updateWaUi(data);
+          showToast(`✅ تم الإرسال أوتوماتيك إلى ${l.name}!`);
+          return;
+        }
+      } catch (e) {}
+
+      // Fallback directly to wa.me if not paired yet
+      window.open(`https://wa.me/${l.phone}?text=${encodeURIComponent(msg)}`, '_blank');
+      markLeadContacted(idx);
+    }
+
+    // ================= GITHUB PUSH =================
+    async function pushToGitHubNow() {
+      const repoName = document.getElementById('gh-repo-name').value.trim() || 'smell-smile-ai-agent';
+      const token = document.getElementById('gh-token').value.trim();
+      const resBox = document.getElementById('gh-result');
+
+      if (!token) {
+        showToast('أدخل مفتاح GitHub Token أولاً أو اضغط تحميل المشروع ZIP!');
+        return;
+      }
+
+      resBox.style.display = 'block';
+      resBox.textContent = '⏳ جاري إنشاء المستودع ورفع جميع ملفات المشروع على حسابك في GitHub...';
+
+      try {
+        const res = await fetch('/api/github/push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ repoName, token })
+        });
+        const data = await res.json();
+        if (data.ok) {
+          resBox.innerHTML = `🎉 <b>تم رفع المشروع بالكامل على GitHub بنجاح!</b>\n\n🔗 رابط المستودع الخاص بك:\n<a href="${data.url}" target="_blank" style="color:var(--gold); font-weight:800;">${data.url}</a>`;
+          showToast('تم رفع المشروع على GitHub بنجاح! 🐙');
+        } else {
+          resBox.textContent = `⚠️ تنبيه: ${data.error}`;
+        }
+      } catch (e) {
+        resBox.textContent = `⚠️ لتشغيل الرفع المباشر تأكد من استخدام معاينة السيرفر الحية، أو اضغط على زر "تحميل المشروع كامل (ZIP)" وارفع الملف مباشرة على GitHub.`;
+      }
+    }
+
+    // ================= LEADS FILTER & OUTREACH MESSAGES =================
+    function filterSector(sec, chipEl) {
+      currentSectorFilter = sec;
+      document.querySelectorAll('#sector-filters .chip').forEach(c => c.classList.remove('active'));
+      if (chipEl) chipEl.classList.add('active');
+      renderLeadQueue();
+    }
+
+    function getOutreachMessage(lead, tpl) {
+      if (tpl === 'b2b_cars' || lead.sector === 'cars') {
+        return `السلام عليكم ورحمة الله 🌸\nتحية طيبة لإدارة *${lead.name}* بمدينة ${lead.city}،\n\nمعكم مستشار الحلول العطرية من شركة *Smell & Smile (سميل أند سمايل)*.\nنقدم لمعارض وصالات السيارات عرضين مميزين:\n1️⃣ *تعطير صالة العرض بالكامل* بأجهزة النانو الذكية (بنظام الإيجار والريفيل الشهري أو الشراء بضمان 3 سنوات) مع *معاينة وتجربة مجانية في معرضكم*.\n2️⃣ *توريد جملة لأجهزة تعطير السيارة الذكية AC601 Mini* (مع إمكانية طباعة شعار معرضكم عليها لتقديمها كهدية فاخرة لعملاء شراء السيارات!).\n\nهل يناسبكم تنسيق زيارة سريعة للمندوب هذا الأسبوع؟ 🚗✨`;
+      }
+      if (tpl === 'b2b_rental') {
+        return `السلام عليكم ورحمة الله 🌸\nتحية طيبة لإدارة *${lead.name}* الكرام (${lead.city})،\n\nمعكم مستشار الحلول العطرية من شركة *Smell & Smile (سميل أند سمايل)* — الرواد في أنظمة التعطير الذكية بتقنية النانو والزيوت العطرية الفندقية منذ 2009.\n\nيسعدنا أن نقدم لمقركم المميز:\n✨ *نظام توريد/إيجار أجهزة التعطير مع الريفيل الشهري والصيانة المجانية* (أو الشراء المباشر بضمان 3 سنوات).\n🎁 ونقدم لكم *تجربة ومعاينة عطرية مجانية في مقركم لمدة 48 ساعة* لتجربة روائح الفنادق والعيادات العالمية (هوتيل بلس، فريش كلين، روح الرياض) قبل التعاقد!\n\nهل يناسبكم تنسيق زيارة سريعة ومجانية من مندوبنا هذا الأسبوع؟ 🤝`;
+      }
+      if (tpl === 'b2b_hvac') {
+        return `أهلاً وسهلاً بإدارة *${lead.name}* الكرام (${lead.city}) 🌸\nمعكم قسم المشاريع والتعطير المركزي من *Smell & Smile*.\n\nنقدم لكم أحدث أجهزة التعطير المركزي التي تُربط مباشرة مع التكييف (HVAC) أو الأجهزة البرجية للمداخل واللوبي لتعطير المساحات حتى 5000 م³ بثبات عالي واستهلاك اقتصادي جداً، مع عقود صيانة وريفيل شهري.\n\nيسعدنا إرسال الكتالوج أو تنسيق معاينة مجانية لموقعكم. متى يناسبكم التواصل؟ ✨`;
+      }
+      return `أهلاً بك من *Smell & Smile (سميل أند سمايل)* 🌸\nدلوقتي تقدر تحول جو مكانك لنفس رائحة فنادق الـ 5 نجوم بأجهزة النانو الذكية بضمان 3 سنوات + زيت عطري 220 مل هدية مجانية!\nتحب نبعتلك الكتالوج والعروض الحالية؟ 🚚`;
+    }
+
+    function renderLeadQueue() {
+      const tpl = document.getElementById('outreach-template').value;
+      const list = document.getElementById('lead-queue-list');
+      const filtered = outreachLeads
+        .map((item, originalIdx) => ({ ...item, originalIdx }))
+        .filter(item => currentSectorFilter === 'all' || item.sector === currentSectorFilter);
+
+      list.innerHTML = filtered.map(l => {
+        const msg = getOutreachMessage(l, tpl);
+        const waUrl = `https://wa.me/${l.phone}?text=${encodeURIComponent(msg)}`;
+        return `
+          <div class="lead-item" style="border-color:${l.contacted ? 'var(--accent-green)' : 'var(--border)'}">
+            <div class="lead-top">
+              <div>
+                <div class="lead-name">${l.name}</div>
+                <div style="font-size:12px; color:var(--text-muted);">📞 +${l.phone} | 📍 ${l.city}</div>
+              </div>
+              <span class="lead-tag">${l.contacted ? '✅ تم الإرسال' : l.category}</span>
+            </div>
+            <div class="lead-actions">
+              <a href="${waUrl}" target="_blank" class="btn btn-whatsapp btn-sm" style="flex:2;" onclick="markLeadContacted(${l.originalIdx})">
+                📲 إرسال العرض عالواتساب (بضغطة زر)
+              </a>
+              <button class="btn btn-gold btn-sm" style="flex:1;" onclick="sendDirectViaServer(${l.originalIdx})">
+                ⚡ إرسال أوتوماتيك من السيرفر
+              </button>
+              <button class="btn btn-outline btn-sm" onclick="moveToCrm(${l.originalIdx})">➕ نقل لـ CRM</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function markLeadContacted(idx) {
+      outreachLeads[idx].contacted = true;
+      updateStats();
+      setTimeout(renderLeadQueue, 250);
+    }
+
+    function moveToCrm(idx) {
+      const l = outreachLeads[idx];
+      crmClients.unshift({
+        name: l.name,
+        phone: l.phone,
+        product: `عميل (${l.category} - ${l.city}) - متابعة عرض إيجار/ريفيل`,
+        status: '🔥 مهتم - متابعة عرض سعر'
+      });
+      renderCrmList();
+      updateStats();
+      showToast('تم نقل الشركة لدفتر المتابعة والريفيل! ✅');
+    }
+
+    // ================= AI CHAT SIMULATOR =================
+    function simulateQuestion(qText) {
+      document.getElementById('customer-input').value = qText;
+      handleUserChat();
+    }
+
+    function handleUserChat() {
+      const inputEl = document.getElementById('customer-input');
+      const userText = inputEl.value.trim();
+      if (!userText) return;
+
+      appendChatMsg(userText, 'customer');
+      inputEl.value = '';
+
+      const smartReply = generateBuiltInSmartReply(userText);
+      lastAiReply = smartReply;
+      appendChatMsg(smartReply, 'agent');
+    }
+
+    function generateBuiltInSmartReply(text) {
+      const t = text.toLowerCase();
+      const numMatch = text.match(/(\d+)/);
+      const areaNum = numMatch ? parseInt(numMatch[1], 10) : null;
+
+      if (t.includes('سيار') || t.includes('عربي') || t.includes('601')) {
+        return `أهلاً بك يا فندم في Smell & Smile 🌸\n\nبخصوص تعطير السيارة، نرشح لك بطل المبيعات **جهاز AC601 Mini الذكي** 🚗✨:\n• يعمل بتقنية النانو تكنولوجي ويقضي تماماً على روائح الدخان والطعام بضغطة زر.\n• يشتغل بشاحن USB وبطارية تدوم طويلاً (تغطية 60 م³).\n• متوفر باللونين الأسود والأبيض مع **ضمان شامل 3 سنوات**.\n• 💰 **سعر العرض الحالي:** 198 ر.س فقط بدلاً من 346 ر.س! (ومتاح معه بوكس مجموعة عطور السيارة الفاخرة بـ 99 ر.س).\n\nتحب نحجزلك اللون الأسود ولا الأبيض؟ 🚚`;
+      }
+      if (t.includes('غالي') || t.includes('خصم') || t.includes('ارخص') || t.includes('أرخص')) {
+        return `حقك تسأل يا فندم، وخليني أوضحلك ليه أجهزة **Smell & Smile** هي أوفر استثمار على المدى الطويل 💡:\n1️⃣ **تقنية النانو الباردة:** الزجاجة الواحدة بتكفيك **30 يوم كاملين**.\n2️⃣ **ضمان شامل 3 سنوات** مع صيانة مجانية.\n3️⃣ **حلول تناسب كل ميزانية:**\n• للغرف والمكاتب: **A323 الجداري بـ 208 ر.س** أو **Aura المتنقل بـ 238 ر.س**.\n• للشقق والعيادات: عرض خاص على **AC106 بسعر 495 ر.س فقط بدلاً من 815 ر.س**!\n• وللشركات والعيادات: متاح **نظام الإيجار والريفيل الشهري** مع تجربة مجانية للمكان!`;
+      }
+      if (t.includes('فندق') || t.includes('مركزي') || t.includes('تكييف') || t.includes('hvac')) {
+        return `أهلاً وسهلاً بحضرتك في قسم مشاريع التعطير المركزي والشركات بـ **Smell & Smile** 🏨✨\nللفنادق والمباني المزودة بتكييف مركزي (HVAC) أو اللوبيات الواسعة، نوفر:\n1️⃣ **أجهزة الربط المباشر على دكت التكييف (SE2500 & SE5000):** تغطي حتى 5000 م³ بخزان عملاق (2.5 إلى 5 لتر).\n2️⃣ **أجهزة المداخل واللوبي الفندقية:** مثل **AC304 Tower البرجي** أو **AC 900 Elite** أو **AC600 ULTRA**.\n3️⃣ متاح **الشراء المباشر بضمان 3 سنوات** أو **عقود الإيجار والريفيل الشهري** مع **معاينة وتجربة مجانية في موقعكم**!\nممكن اسم الفندق/الشركة والمدينة ورقم الجوال للتنسيق اليوم؟ 📞`;
+      }
+      if (t.includes('عياد') || t.includes('كافيه') || t.includes('مطعم') || t.includes('شرك') || t.includes('ايجار') || t.includes('إيجار') || t.includes('ريفيل')) {
+        let recDevice = (areaNum && areaNum > 200)
+          ? 'جهاز **AC 900 Elite** (تغطية حتى 2700 م³ بخزان 1 لتر)'
+          : 'جهاز **AC100 المعدني الفاخر** أو **AC106 الذكي** (تغطية 300-480 م³)';
+        return `يا هلا بك يا فندم! تعطير العيادات والكافيهات والشركات هو ملعبنا الأساسي في **Smell & Smile** 🌟\nنرشح لك ${recDevice}:\n✅ **متاح بنظامين:**\n1️⃣ **نظام الإيجار والريفيل الشهري:** تركيب الجهاز + زيارة شهرية لتعبئة الزيت العطري النقي + صيانة مجانية.\n2️⃣ **نظام الشراء الكاش:** ضمان **3 سنوات** + **عبوة زيت عطري 220 مل هدية مجانية**!\n🎁 تحب ننسقلك **معاينة وتجربة مجانية للمكان لمدة 48 ساعة**؟ ابعتلي بس الموقع ورقمك! 📲`;
+      }
+      return `أهلاً وسهلاً بك في **Smell & Smile** 🌸\nأفضل أجهزتنا للمنازل والفلل والشركات (بضمان 3 سنوات وتقنية النانو الباردة):\n• **جهاز AC106 (الأكثر مبيعاً - 480 م³):** بسعر عرض **495 ر.س بدلاً من 815 ر.س**!\n• **جهاز AC100 المعدني الفاخر (300 م³ + زيت 220 مل هدية):** بسعر **1104 ر.س**.\n• **جهاز AC 900 Elite للمساحات الكبيرة والفلل (2700 م³ + زيت هدية):** بسعر **1270 ر.س**.\nقولي المساحة عندك كام متر تقريباً وأرشحلك الجهاز والزيت الأنسب فوراً! ✨`;
+    }
+
+    function appendChatMsg(text, sender) {
+      const box = document.getElementById('chat-box');
+      const div = document.createElement('div');
+      div.className = `msg msg-${sender}`;
+      div.textContent = text;
+      box.appendChild(div);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function sendLastReplyToWhatsApp() {
+      const phone = cleanPhone(document.getElementById('customer-phone-chat').value);
+      const url = phone
+        ? `https://wa.me/${phone}?text=${encodeURIComponent(lastAiReply)}`
+        : `https://wa.me/?text=${encodeURIComponent(lastAiReply)}`;
+      window.open(url, '_blank');
+    }
+
+    // ================= SPACE CALCULATOR =================
+    function calculateSpaceOffer() {
+      const placeType = document.getElementById('calc-place-type').value;
+      const areaM2 = parseFloat(document.getElementById('calc-area').value) || 100;
+      const contract = document.getElementById('calc-contract').value;
+      const cur = document.getElementById('calc-currency').value;
+      const volumeM3 = Math.round(areaM2 * 3);
+
+      let device = '';
+      let price = '';
+      let oilRec = '';
+
+      if (placeType === 'car' || areaM2 <= 20) {
+        device = 'جهاز AC601 Mini للسيارة والمكتب';
+        price = `198${cur} بدلاً من 346${cur}`;
+        oilRec = 'بوكس مجموعة عطور السيارة الفاخرة (99' + cur + ')';
+      } else if (areaM2 <= 35) {
+        device = 'جهاز A323 الجداري (208' + cur + ') أو جهاز AC105 (410' + cur + ')';
+        price = `208 - 410${cur}`;
+        oilRec = 'زيت فريش كلين (Fresh Clean) أو بلوم (Bloom)';
+      } else if (areaM2 <= 140) {
+        device = 'جهاز AC106 الذكي (495' + cur + ') أو جهاز AC100 المعدني الفاخر (1104' + cur + ' شامل زيت 220 مل مجاناً)';
+        price = `495${cur} (لـ AC106) أو 1104${cur} (لـ AC100 مع الزيت الهدية)`;
+        oilRec = 'زيت هوتيل بلس (Hotel Plus) أو فريش كلين أو روح المدينة';
+      } else if (areaM2 <= 900 && contract !== 'hvac') {
+        device = 'جهاز AC 900 Elite بخزان 1 لتر (1270' + cur + ' شامل زيت مجاني) أو AC250 ULTRA (2664' + cur + ')';
+        price = `1270 - 2664${cur}`;
+        oilRec = 'زيت هوتيل بلس أو روح الرياض (Riyadh Essence)';
+      } else {
+        device = 'نظام التعطير المركزي للتكييف SE2500 / SE5000 أو جهاز AC600 ULTRA العملاق (5100 م³)';
+        price = `3585 - 4342${cur}`;
+        oilRec = 'زيت هوتيل بلس + روح الرياض (عبوات 980 مل)';
+      }
+
+      const offerText = `🌸 *عرض سعر وترشيح ذكي من Smell & Smile* 🌸\n` +
+        `──────────────────────\n` +
+        `📏 *المساحة:* ${areaM2} م² (حجم التغطية: ${volumeM3} م³)\n` +
+        `🏆 *الجهاز المرشح:* ${device}\n` +
+        `💰 *سعر الشراء الكاش:* ${price} (شامل ضمان 3 سنوات)\n` +
+        `🔄 *نظام الشركات (الإيجار والريفيل الشهري):* متاح توريد الجهاز مع عقد تعبئة زيت شهري وصيانة مجانية + *معاينة وتجربة مجانية في مكانكم لمدة 48 ساعة*!\n` +
+        `✨ *الزيت العطري المقترح:* ${oilRec} (نقي 100% يدوم 30 يوم)\n\n` +
+        `تحب نرتب زيارة للمعاينة المجانية وتجربة الروائح على الطبيعة؟ 📲`;
+
+      const resBox = document.getElementById('calc-result');
+      resBox.textContent = offerText;
+      resBox.style.display = 'block';
+      document.getElementById('calc-actions').style.display = 'flex';
+      lastAiReply = offerText;
+    }
+
+    function sendCalcToWhatsApp() {
+      const text = document.getElementById('calc-result').textContent;
+      window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function renderCatalogGrid() {
+      const grid = document.getElementById('catalog-grid');
+      grid.innerHTML = CATALOG.map(p => `
+        <div class="prod-card">
+          <div>
+            <span class="prod-badge">${p.badge}</span>
+            <h4 style="color:#fff; font-size:14px; margin-bottom:4px;">${p.name}</h4>
+            <p style="font-size:12px; color:var(--text-muted); margin-bottom:6px;">تغطية: <b>${p.m3} م³</b> (حوالي ${p.m2} م²)</p>
+            <p style="font-size:12px; color:#cbd5e1;">${p.desc}</p>
+          </div>
+          <div>
+            <div class="price-tag">${p.price} ر.س <span style="font-size:12px; color:var(--text-muted); text-decoration:line-through; font-weight:400;">${p.oldPrice} ر.س</span></div>
+            <button class="btn btn-outline btn-sm" style="width:100%;" onclick="shareProductWhatsApp('${p.id}')">📲 إرسال تفاصيل الجهاز لعميل</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function shareProductWhatsApp(prodId) {
+      const p = CATALOG.find(x => x.id === prodId);
+      if (!p) return;
+      const msg = `🌸 *${p.name} من Smell & Smile* 🌸\n• التغطية: ${p.m3} م³ (${p.m2} م²)\n• المميزات: ${p.desc}\n• الضمان: 3 سنوات شامل\n• السعر: ${p.price} ر.س بدلاً من ${p.oldPrice} ر.س!\nتحب نحجزلك الجهاز أو نعملك معاينة؟ 🚚`;
+      window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    // ================= RADAR & PHONE EXTRACTOR =================
+    function openLeadRadar(platform) {
+      const niche = document.getElementById('b2b-niche').value;
+      const city = document.getElementById('b2b-city').value.trim() || 'الرياض';
+      let url = '';
+      if (platform === 'maps') {
+        url = `https://www.google.com/maps/search/${encodeURIComponent(niche + ' في ' + city)}`;
+      } else if (platform === 'fb') {
+        url = `https://www.google.com/search?q=${encodeURIComponent('site:facebook.com "' + niche + '" "' + city + '" "05"')}`;
+      } else {
+        url = `https://www.google.com/search?q=${encodeURIComponent('site:instagram.com "' + niche + '" "' + city + '"')}`;
+      }
+      window.open(url, '_blank');
+    }
+
+    function cleanPhone(raw) {
+      if (!raw) return '';
+      const map = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+      let s = raw.replace(/[٠-٩]/g, d => map[d]).replace(/[^\d+]/g, '');
+      if (s.startsWith('00')) s = s.slice(2);
+      if (s.startsWith('+')) s = s.slice(1);
+      if (/^05\d{8}$/.test(s)) s = '966' + s.slice(1);
+      else if (/^5\d{8}$/.test(s)) s = '966' + s;
+      if (/^01[0125]\d{8}$/.test(s)) s = '2' + s;
+      return s;
+    }
+
+    function extractPhonesFromText() {
+      const raw = document.getElementById('raw-scrape-text').value;
+      if (!raw.trim()) {
+        showToast('الصق النص أولاً!');
+        return;
+      }
+      const lines = raw.split(/\n+/);
+      let addedCount = 0;
+      lines.forEach(line => {
+        const matches = line.match(/(?:\+?966\s*5\d[\d\s-]{7,9}|05\d[\d\s-]{7,9}|\+?20\s*1[0125]\d[\d\s-]{7,9}|01[0125]\d[\d\s-]{7,9})/g);
+        if (matches) {
+          matches.forEach(m => {
+            const cleaned = cleanPhone(m);
+            if (cleaned.length >= 11 && !outreachLeads.some(l => l.phone === cleaned)) {
+              const nameGuess = line.replace(m, '').replace(/[-:،,تليفونرقمجوال]/g, '').trim().slice(0, 45) || 'شركة مستخرجة جديدة';
+              outreachLeads.unshift({
+                name: nameGuess,
+                phone: cleaned,
+                category: '🎯 عميل جديد',
+                sector: 'clinics',
+                city: 'السعودية',
+                contacted: false
+              });
+              addedCount++;
+            }
+          });
+        }
+      });
+      document.getElementById('scrape-summary').textContent = addedCount > 0
+        ? `✅ تم استخراج وإضافة ${addedCount} رقم جديد للقائمة!`
+        : `ℹ️ لم يتم العثور على أرقام جديدة غير مكررة.`;
+      renderLeadQueue();
+      updateStats();
+    }
+
+    // ================= CRM & REFILL =================
+    function addCrmClient() {
+      const name = document.getElementById('crm-name').value.trim();
+      const phone = cleanPhone(document.getElementById('crm-phone').value);
+      const prod = document.getElementById('crm-product').value.trim() || 'جهاز تعطير + زيت شهري';
+      const status = document.getElementById('crm-status').value;
+      if (!name || !phone) {
+        showToast('اكتب اسم العميل ورقم الواتساب!');
+        return;
+      }
+      crmClients.unshift({ name, phone, product: prod, status });
+      renderCrmList();
+      updateStats();
+      showToast('تم حفظ العميل وتفعيل منبه الريفيل! 🔔');
+    }
+
+    function renderCrmList() {
+      const box = document.getElementById('crm-list');
+      box.innerHTML = crmClients.map((c, idx) => {
+        const refillMsg = `أهلاً بكم في *Smell & Smile (سميل أند سمايل)* 🌸\nنود تذكيركم باقتراب موعد *التجديد الشهري للزيت العطري (Refill)* الخاص بكم (${c.product}).\nهل تحبون شحن نفس الرائحة المعتادة هذا الشهر أم تجربة رائحة جديدة مثل (روح الرياض / إماجين / هوتيل بلس)؟ 🚚✨`;
+        const waUrl = `https://wa.me/${c.phone}?text=${encodeURIComponent(refillMsg)}`;
+        return `
+          <div class="lead-item">
+            <div class="lead-top">
+              <div>
+                <div class="lead-name">${c.name}</div>
+                <div style="font-size:12px; color:#cbd5e1;">📦 ${c.product}</div>
+                <div style="font-size:11.5px; color:var(--text-muted);">📞 +${c.phone}</div>
+              </div>
+              <span class="lead-tag" style="background:rgba(212,175,55,0.2); color:var(--gold-light);">${c.status}</span>
+            </div>
+            <div class="lead-actions">
+              <a href="${waUrl}" target="_blank" class="btn btn-whatsapp btn-sm" style="flex:2;">
+                🔄 إرسال تذكير الريفيل الشهري عالواتساب
+              </a>
+              <button class="btn btn-outline btn-sm" onclick="crmClients.splice(${idx},1);renderCrmList();updateStats();">🗑️ حذف</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function exportCrmCsv() {
+      let csv = '\uFEFFالاسم,رقم الواتساب,المنتج والنظام,الحالة\n';
+      crmClients.forEach(c => {
+        csv += `"${c.name}","${c.phone}","${c.product}","${c.status}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'smell_smile_crm.csv';
+      a.click();
+    }
+
+    // ================= MEDIA BUYER =================
+    function generateMediaPlan() {
+      const camp = document.getElementById('media-campaign').value;
+      const rawPhone = cleanPhone(document.getElementById('media-phone').value);
+      const waLink = rawPhone ? `https://wa.me/${rawPhone}` : `https://wa.me/966500000000`;
+
+      let content = '';
+      if (camp === 'b2b_refill') {
+        content = `🎯 [حملة الشركات السعودية - إيجار أجهزة وريفيل شهري]\n` +
+          `أول انطباع بياخده العميل أول ما يدخل عيادتك، فندقك، أو الكافيه بتاعك مش الديكور... هو "الريحة"! ✨\n` +
+          `مع أنظمة التعطير الذكية بتقنية النانو من Smell & Smile:\n` +
+          `✅ تعطير ثابت يغطي من 100م³ لحد 5000م³ (مستقل أو على التكييف المركزي HVAC).\n` +
+          `✅ متاح نظام (توريد/إيجار الأجهزة + ريفيل زيت شهري وصيانة مجانية) أو الشراء بضمان 3 سنوات.\n` +
+          `🎁 احجز "معاينة وتجربة عطرية مجانية في مكانك لمدة 48 ساعة" قبل التعاقد!\n` +
+          `👈 تواصل معنا عالواتساب الآن:\n${waLink}`;
+      } else if (camp === 'b2c_home') {
+        content = `🎯 [حملة تعطير المنازل والفلل]\n` +
+          `خلّي بيتك أو مجلسك ريحته زي فنادق الـ 5 نجوم 24 ساعة بضغطة زر من جوالك! 🏠🌸\n` +
+          `🔥 الزجاجة الواحدة بتكفيك 30 يوم كاملين بتقنية النانو الباردة!\n` +
+          `🔥 ضمان شامل 3 سنوات.\n` +
+          `🔥 خصم 38% على جهاز AC106 الذكي (495 ر.س فقط) أو خد زيت 220 مل هدية مع جهاز AC100!\n` +
+          `👈 اطلب عالواتساب:\n${waLink}`;
+      } else if (camp === 'car_ac601') {
+        content = `🎯 [حملة جهاز السيارة الذكي AC601 Mini]\n` +
+          `جدد هواء سيارتك وتخلص من روائح الدخان والطعام بضغطة زر مع جهاز AC601 Mini بتقنية النانو من Smell & Smile! 🚗✨\n` +
+          `✨ شحن USB + ضمان شامل 3 سنوات كاملة!\n` +
+          `💰 بسعر عرض 198 ر.س فقط بدلاً من 346 ر.س!\n` +
+          `👈 اطلب الآن عالواتساب:\n${waLink}`;
+      } else {
+        content = `🎯 [حملة الزيوت العطرية النقية والعطور الشخصية]\n` +
+          `بتحب ريحة الفنادق الفخمة (هوتيل بلس)؟ ولا أصالة العود والعنبر في (روح الرياض) وهدوء (روح المدينة)؟ 🌸✨\n` +
+          `زيوت Smell & Smile العطرية نقية 100% بدون ماء أو كحول وتدوم 30 يوماً!\n` +
+          `🎁 وجرب بوكس عينات العطور الشخصية الثابتة بـ 39 ر.س فقط!\n` +
+          `👈 اطلب الكتالوج عالواتساب:\n${waLink}`;
+      }
+      document.getElementById('media-output').textContent = content;
+    }
+
+    function copyText(elId) {
+      navigator.clipboard.writeText(document.getElementById(elId).textContent);
+      showToast('تم النسخ بنجاح! ✅');
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => { t.style.display = 'none'; }, 2800);
+    }
+
+    function updateStats() {
+      document.getElementById('stat-leads').textContent = outreachLeads.length;
+      document.getElementById('stat-contacted').textContent = outreachLeads.filter(l => l.contacted).length;
+      document.getElementById('stat-refills').textContent = crmClients.length;
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCatalogGrid();
+      renderLeadQueue();
+      renderCrmList();
+      generateMediaPlan();
+      updateStats();
+      refreshWaStatus();
+      setInterval(refreshWaStatus, 6000);
+    });
+  </script>
+</body>
+</html>
