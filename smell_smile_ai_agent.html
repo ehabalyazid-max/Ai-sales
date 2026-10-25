@@ -819,8 +819,7 @@
 
       const msg = await generateGeminiLeadMessage(lead);
       if (btn) btn.textContent = "✨ ألف رسالة بـ Gemini AI وابعتها للعميل التالي";
-      if (prevBox) prevBox.textContent = "✅ رسالة Gemini الجاهزة لـ (" + lead.name + "):
-" + msg;
+      if (prevBox) prevBox.textContent = "✅ رسالة Gemini الجاهزة لـ (" + lead.name + "):\n" + msg;
 
       const url = "https://wa.me/" + lead.phone + "?text=" + encodeURIComponent(msg);
       lead.sent = true;
